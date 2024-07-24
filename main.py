@@ -34,8 +34,8 @@ class MainWindow(QMainWindow):
         self.ui.btn_toggle_menu.clicked.connect(lambda: UIFunctions.toggleMenu(self, 220, True))
 
         self.ui.stackedWidget.setMinimumWidth(20)
-        UIFunctions.addNewMenu(self, "TRAIN", "btn_home", "url(icons/train_icon.png)", True)
-        UIFunctions.addNewMenu(self, "INFORMATION", "btn_new_user", "url(icons/info_icon.png)", True)        
+        UIFunctions.addNewMenu(self, "TRAIN", "btn_home", "url(:/icons/train_icon.png)", True)
+        UIFunctions.addNewMenu(self, "INFORMATION", "btn_new_user", "url(:/icons/info_icon.png)", True)        
 
         UIFunctions.selectStandardMenu(self, "btn_new_user")
 
