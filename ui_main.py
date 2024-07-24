@@ -11,6 +11,7 @@ import files_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        #self.isMaximized = False
         if MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(1000, 720)
@@ -278,7 +279,6 @@ class Ui_MainWindow(object):
 "	border-left-style: solid;\n"
 "	border-top-right-radius: 3px;\n"
 "	border-bottom-right-radius: 3px;	\n"
-"	background-image: url(:/16x16/icons/16x16/cil-arrow-bottom.png);\n"
 "	background-position: center;\n"
 "	background-repeat: no-reperat;\n"
 " }\n"
@@ -376,7 +376,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_toggle_menu.sizePolicy().hasHeightForWidth())
         self.btn_toggle_menu.setSizePolicy(sizePolicy)
         self.btn_toggle_menu.setStyleSheet(u"QPushButton {\n"
-"	background-image: url(icons/menu.png);\n"
+"	background-image: url(:/icons/menu.png);\n"
 "	background-position: center;\n"
 "	background-repeat: no-reperat;\n"
 "	border: none;\n"
@@ -430,7 +430,7 @@ class Ui_MainWindow(object):
         self.frame_icon_top_bar.setObjectName(u"frame_icon_top_bar")
         self.frame_icon_top_bar.setMaximumSize(QSize(30, 30))
         self.frame_icon_top_bar.setStyleSheet(u"background: transparent;\n"
-"background-image: url(icons/screen.png);\n"
+"background-image: url(:/icons/screen.png);\n"
 "background-position: center;\n"
 "background-repeat: no-repeat;\n"
 "")
@@ -486,7 +486,7 @@ class Ui_MainWindow(object):
 "	background-color: rgb(85, 170, 255);\n"
 "}")
         icon = QIcon()
-        icon.addFile(u"icons/minus.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u":/icons/minus.png", QSize(), QIcon.Normal, QIcon.Off)
         self.btn_minimize.setIcon(icon)
 
         self.horizontalLayout_5.addWidget(self.btn_minimize)
@@ -508,8 +508,9 @@ class Ui_MainWindow(object):
 "	background-color: rgb(85, 170, 255);\n"
 "}")
         icon1 = QIcon()
-        icon1.addFile(u"icons/full.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon1.addFile(u":/icons/full.png", QSize(), QIcon.Normal, QIcon.Off)
         self.btn_maximize_restore.setIcon(icon1)
+
 
         self.horizontalLayout_5.addWidget(self.btn_maximize_restore)
 
@@ -530,7 +531,7 @@ class Ui_MainWindow(object):
 "	background-color: rgb(85, 170, 255);\n"
 "}")
         icon2 = QIcon()
-        icon2.addFile(u"icons/close.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon2.addFile(u":/icons/close.png", QSize(), QIcon.Normal, QIcon.Off)
         self.btn_close.setIcon(icon2)
 
         self.horizontalLayout_5.addWidget(self.btn_close)
@@ -827,7 +828,7 @@ class Ui_MainWindow(object):
         #model image
         self.image_label = QLabel(self.page_info)
         self.image_label.setObjectName(u"image_label")
-        self.image_pixmap = QPixmap("model.jpg")  
+        self.image_pixmap = QPixmap(":/model.jpg")   
         scaled_pixmap  = self.image_pixmap.scaled(600, 600, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.image_label.setPixmap(scaled_pixmap)
         self.image_label.setAlignment(Qt.AlignCenter)
@@ -1410,7 +1411,7 @@ class Ui_MainWindow(object):
         self.frame_size_grip.setObjectName(u"frame_size_grip")
         self.frame_size_grip.setMaximumSize(QSize(20, 20))
         self.frame_size_grip.setStyleSheet(u"QSizeGrip {\n"
-"	background-image: url(:/16x16/icons/16x16/cil-size-grip.png);\n"
+"	background-image: url(:/icons/triangle.png);\n"
 "	background-position: center;\n"
 "	background-repeat: no-reperat;\n"
 "}")
