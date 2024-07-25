@@ -34,10 +34,14 @@ class MainWindow(QMainWindow):
         self.ui.btn_toggle_menu.clicked.connect(lambda: UIFunctions.toggleMenu(self, 220, True))
 
         self.ui.stackedWidget.setMinimumWidth(20)
-        UIFunctions.addNewMenu(self, "TRAIN", "btn_home", "url(:/icons/train_icon.png)", True)
-        UIFunctions.addNewMenu(self, "INFORMATION", "btn_new_user", "url(:/icons/info_icon.png)", True)        
+        UIFunctions.addNewMenu(self, "PUSH UP", "btn_pushup", "url(:/icons/train_icon.png)", True)
+        UIFunctions.addNewMenu(self, "SQUAT", "btn_squat", "url(:/icons/train_icon.png)", True) 
+        UIFunctions.addNewMenu(self, "SIT UP", "btn_situp", "url(:/icons/train_icon.png)", True)       
+        UIFunctions.addNewMenu(self, "INFORMATION", "btn_info", "url(:/icons/info_icon.png)", True)   
+          
+   
 
-        UIFunctions.selectStandardMenu(self, "btn_new_user")
+        UIFunctions.selectStandardMenu(self, "btn_info")
 
         self.ui.stackedWidget.setCurrentWidget(self.ui.page_info)
 
@@ -61,20 +65,35 @@ class MainWindow(QMainWindow):
        
         self.show()
         
+
     def Button(self):
         btnWidget = self.sender()
 
-        if btnWidget.objectName() == "btn_home":
-            self.ui.stackedWidget.setCurrentWidget(self.ui.page_home)
-            UIFunctions.resetStyle(self, "btn_home")
-            UIFunctions.labelPage(self, "Home")
+        if btnWidget.objectName() == "btn_pushup":
+            self.ui.stackedWidget.setCurrentWidget(self.ui.page_pushup)
+            UIFunctions.resetStyle(self, "btn_pushup")
+            UIFunctions.labelPage(self, "PUSH UP")
+            btnWidget.setStyleSheet(UIFunctions.selectMenu(btnWidget.styleSheet()))
+
+        if btnWidget.objectName() == "btn_squat":
+            self.ui.stackedWidget.setCurrentWidget(self.ui.page_squat)
+            UIFunctions.resetStyle(self, "btn_squat")
+            UIFunctions.labelPage(self, "SQUAT")
+            btnWidget.setStyleSheet(UIFunctions.selectMenu(btnWidget.styleSheet()))
+
+        if btnWidget.objectName() == "btn_situp":
+            self.ui.stackedWidget.setCurrentWidget(self.ui.page_situp)
+            UIFunctions.resetStyle(self, "btn_situp")
+            UIFunctions.labelPage(self, "SIT UP")
             btnWidget.setStyleSheet(UIFunctions.selectMenu(btnWidget.styleSheet()))
             
-        if btnWidget.objectName() == "btn_new_user":
+        if btnWidget.objectName() == "btn_info":
             self.ui.stackedWidget.setCurrentWidget(self.ui.page_info)
-            UIFunctions.resetStyle(self, "btn_new_user")
+            UIFunctions.resetStyle(self, "btn_info")
             UIFunctions.labelPage(self, "Information")
             btnWidget.setStyleSheet(UIFunctions.selectMenu(btnWidget.styleSheet()))
+
+        
 
        
     def eventFilter(self, watched, event):
