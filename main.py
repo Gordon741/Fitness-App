@@ -7,6 +7,13 @@ from PyQt5.QtWidgets import *
 from ui_main import Ui_MainWindow
 from ui_styles import Style
 from ui_functions import *
+import absl.logging
+from PyQt5.QtCore import QLoggingCategory
+from PyQt5.QtGui import QGuiApplication
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module='google.protobuf.symbol_database')
+absl.logging.set_verbosity(absl.logging.INFO)
+absl.logging.use_python_logging()
 
 
 class MainWindow(QMainWindow):
@@ -23,8 +30,8 @@ class MainWindow(QMainWindow):
         
 
         UIFunctions.removeTitleBar(True)
-        self.setWindowTitle('AI Fitness')
-        UIFunctions.labelTitle(self, 'AI Fitness')
+        self.setWindowTitle('Real-Time AI Fitness Application')
+        UIFunctions.labelTitle(self, 'Real-Time AI Fitness Application')
 
         startSize = QSize(1000, 850)
         self.resize(startSize)
@@ -45,7 +52,7 @@ class MainWindow(QMainWindow):
 
         self.ui.stackedWidget.setCurrentWidget(self.ui.page_info)
 
-        UIFunctions.userIcon(self, "Fit", "", True)
+        UIFunctions.userIcon(self, "RAFA", "", True)
 
 
         def moveWindow(event):
