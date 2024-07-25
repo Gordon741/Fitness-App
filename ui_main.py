@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtGui, QtWidgets
-import DetectorCode as dc
+import PoseModule as pm
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -8,6 +8,7 @@ import numpy as np
 import cv2
 import sys
 import files_rc
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -685,24 +686,24 @@ class Ui_MainWindow(object):
         self.stackedWidget.setObjectName(u"stackedWidget")
         self.stackedWidget.setStyleSheet(u"background: transparent;")
 
-        ######################################################## page home
+        ######################################################## page pushup
 
-        self.page_home = QWidget()
-        self.page_home.setObjectName(u"page_home")
+        self.page_pushup = QWidget()
+        self.page_pushup.setObjectName(u"page_pushup")
 
         #vertical layout
-        self.vertical_layout = QVBoxLayout(self.page_home)
+        self.vertical_layout = QVBoxLayout(self.page_pushup)
         self.vertical_layout.setObjectName(u"vertical_layout")
         self.vertical_layout.setContentsMargins(0, 20, 0, 0)
         self.vertical_layout.setContentsMargins(40, 40, 40, 40)
 
         #horizontal layout for the text
-        self.hori1 = QHBoxLayout(self.page_home)
+        self.hori1 = QHBoxLayout(self.page_pushup)
         self.hori1.setObjectName(u"hori1")
         self.hori1.setContentsMargins(20, 20, 20, 20)
 
         #horizontal layout for the screen & progress bar
-        self.hori2 = QHBoxLayout(self.page_home)
+        self.hori2 = QHBoxLayout(self.page_pushup)
         self.hori2.setObjectName(u"hori2")
         self.hori2.setContentsMargins(20, 20, 20, 20)
 
@@ -711,7 +712,7 @@ class Ui_MainWindow(object):
         self.splitter.setObjectName(u"splitter")
 
         #Screen
-        self.screen = QtWidgets.QLabel(self.page_home)
+        self.screen = QtWidgets.QLabel(self.page_pushup)
         self.screen.setAutoFillBackground(False)
         self.screen.setFrameShape(QtWidgets.QFrame.Panel)
         self.screen.setLineWidth(5)
@@ -721,7 +722,7 @@ class Ui_MainWindow(object):
         self.screen.setVisible(False)
 
         #Progress Bar
-        self.progressBar = QProgressBar(self.page_home)
+        self.progressBar = QProgressBar(self.page_pushup)
         self.progressBar.setProperty("value", 0)
         self.progressBar.setOrientation(QtCore.Qt.Vertical)
         self.hori2.addWidget(self.progressBar)
@@ -729,7 +730,7 @@ class Ui_MainWindow(object):
         self.progressBar.setVisible(False)
 
         #labels
-        self.label1 = QLabel(self.page_home)
+        self.label1 = QLabel(self.page_pushup)
         self.label1.setObjectName(u"label1")
         font5 = QFont()
         font5.setFamily(u"Segoe UI")
@@ -738,19 +739,19 @@ class Ui_MainWindow(object):
         self.label1.setStyleSheet(u"")
         self.label1.setAlignment(Qt.AlignCenter)
         self.hori1.addWidget(self.label1)
-        self.label2 = QLabel(self.page_home)
+        self.label2 = QLabel(self.page_pushup)
         self.label2.setObjectName(u"label2")
         self.label2.setFont(font5)
         self.label2.setStyleSheet(u"")
         self.label2.setAlignment(Qt.AlignCenter)
         self.hori1.addWidget(self.label2)
-        self.label3 = QLabel(self.page_home)
+        self.label3 = QLabel(self.page_pushup)
         self.label3.setObjectName(u"label3")
         self.label3.setFont(font5)
         self.label3.setStyleSheet(u"")
         self.label3.setAlignment(Qt.AlignCenter)
         self.hori1.addWidget(self.label3)
-        self.label4 = QLabel(self.page_home)
+        self.label4 = QLabel(self.page_pushup)
         self.label4.setObjectName(u"label4")
         self.label4.setFont(font5)
         self.label4.setStyleSheet(u"")
@@ -779,21 +780,43 @@ class Ui_MainWindow(object):
         self.vertical_layout.setStretch(2, 6)
          
         #worker
-        self.Worker1 = Worker1()
+        self.Worker1 = Worker1(self)
         self.Worker1.ImageUpdate.connect(self.ImageUpdateSlot)
-        self.Worker1.ProgressUpdate.connect(self.updateProgress)
-        self.Worker1.PushUpCountUpdate.connect(self.updatePushUpCount)
 
+        #progress bar
+        self.Worker1.PushUpProgressUpdate.connect(self.updateProgress)
+        self.Worker1.SquatProgressUpdate.connect(self.squat_updateProgress)
+        self.Worker1.SitUpProgressUpdate.connect(self.situp_updateProgress)
+
+        #counter
+        self.Worker1.PushUpCountUpdate.connect(self.updateCount)
+        self.Worker1.SquatCountUpdate.connect(self.squat_updateCount) 
+        self.Worker1.SitUpCountUpdate.connect(self.situp_updateCount) 
+
+
+        self.Worker1.start()
+
+        # Initialize timers
         self.timer = QTimer()
         self.timer.timeout.connect(self.updateTime)
         self.start_time = QTime(0, 0, 0)
         self.timer.start(1000)
 
-        self.Worker1.start()
+        self.squat_timer = QTimer()
+        self.squat_timer.timeout.connect(self.squat_updateTime)
+        self.squat_start_time = QTime(0, 0, 0)
+        self.squat_timer.start(1000)
+
+        self.situp_timer = QTimer()
+        self.situp_timer.timeout.connect(self.situp_updateTime)
+        self.situp_start_time = QTime(0, 0, 0)
+        self.situp_timer.start(1000)
+
+       
 
 
         #add page
-        self.stackedWidget.addWidget(self.page_home)
+        self.stackedWidget.addWidget(self.page_pushup)
 
         ######################################################## page info
 
@@ -856,6 +879,8 @@ class Ui_MainWindow(object):
         instruct5_font.setPointSize(11)
         self.instruct5.setFont(instruct5_font)
         self.instruct5.setAlignment(Qt.AlignCenter)
+        self.instruct5.setWordWrap(True)
+        self.instruct5.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         self.instruct6= QLabel(self.page_info)
         self.instruct6.setObjectName(u"instruct6")
@@ -884,6 +909,199 @@ class Ui_MainWindow(object):
 
         #add page
         self.stackedWidget.addWidget(self.page_info)
+
+        ######################################################## page squat
+
+        self.page_squat = QWidget()
+        self.page_squat.setObjectName(u"page_squat")
+
+        #vertical layout
+        self.squat_vertical_layout = QVBoxLayout(self.page_squat)
+        self.squat_vertical_layout.setObjectName(u"squat_vertical_layout")
+        self.squat_vertical_layout.setContentsMargins(0, 20, 0, 0)
+        self.squat_vertical_layout.setContentsMargins(40, 40, 40, 40)
+
+        #horizontal layout for the text
+        self.squat_hori1 = QHBoxLayout(self.page_squat)
+        self.squat_hori1.setObjectName(u"squat_hori1")
+        self.squat_hori1.setContentsMargins(20, 20, 20, 20)
+
+        #horizontal layout for the screen & progress bar
+        self.squat_hori2 = QHBoxLayout(self.page_squat)
+        self.squat_hori2.setObjectName(u"squat_hori2")
+        self.squat_hori2.setContentsMargins(20, 20, 20, 20)
+
+        #try splitters
+        self.squat_splitter = QSplitter(Qt.Horizontal)
+        self.squat_splitter.setObjectName(u"squat_splitter")
+
+        #Screen
+        self.squat_screen = QtWidgets.QLabel(self.page_squat)
+        self.squat_screen.setAutoFillBackground(False)
+        self.squat_screen.setFrameShape(QtWidgets.QFrame.Panel)
+        self.squat_screen.setLineWidth(5)
+        self.squat_screen.setText("")
+        self.squat_hori2.addWidget(self.squat_screen)
+        self.squat_screen.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)  # Make it expand
+        self.squat_screen.setVisible(False)
+
+        #Progress Bar
+        self.squat_progressBar = QProgressBar(self.page_squat)
+        self.squat_progressBar.setProperty("value", 0)
+        self.squat_progressBar.setOrientation(QtCore.Qt.Vertical)
+        self.squat_hori2.addWidget(self.squat_progressBar)
+        self.squat_progressBar.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)  # Make it expand
+        self.squat_progressBar.setVisible(False)
+
+        #labels
+        self.squat_label1 = QLabel(self.page_squat)
+        self.squat_label1.setObjectName(u"squat_label1")
+        squat_font5 = QFont()
+        squat_font5.setFamily(u"Segoe UI")
+        squat_font5.setPointSize(16)
+        self.squat_label1.setFont(squat_font5)
+        self.squat_label1.setStyleSheet(u"")
+        self.squat_label1.setAlignment(Qt.AlignCenter)
+        self.squat_hori1.addWidget(self.squat_label1)
+        self.squat_label2 = QLabel(self.page_squat)
+        self.squat_label2.setObjectName(u"squat_label2")
+        self.squat_label2.setFont(font5)
+        self.squat_label2.setStyleSheet(u"")
+        self.squat_label2.setAlignment(Qt.AlignCenter)
+        self.squat_hori1.addWidget(self.squat_label2)
+        self.squat_label3 = QLabel(self.page_squat)
+        self.squat_label3.setObjectName(u"squat_label3")
+        self.squat_label3.setFont(squat_font5)
+        self.squat_label3.setStyleSheet(u"")
+        self.squat_label3.setAlignment(Qt.AlignCenter)
+        self.squat_hori1.addWidget(self.squat_label3)
+        self.squat_label4 = QLabel(self.page_squat)
+        self.squat_label4.setObjectName(u"squat_label4")
+        self.squat_label4.setFont(squat_font5)
+        self.squat_label4.setStyleSheet(u"")
+        self.squat_label4.setAlignment(Qt.AlignCenter)
+        self.squat_hori1.addWidget(self.squat_label4)
+
+        #set screen and progress bar as visible
+        self.squat_screen.setVisible(True)
+        self.squat_progressBar.setVisible(True)
+
+        #spacer
+        self.squat_spacer1 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.squat_spacer2 = QWidget()
+        self.squat_spacer2.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        #set splitter
+        self.squat_splitter.addWidget(self.squat_screen)
+        self.squat_splitter.addWidget(self.squat_spacer2)
+        self.squat_splitter.addWidget(self.squat_progressBar)
+        self.squat_splitter.setSizes([80, 10, 1])
+
+        #add layout
+        self.squat_vertical_layout.addLayout(self.squat_hori1)
+        self.squat_vertical_layout.addItem(self.squat_spacer1)
+        self.squat_vertical_layout.addWidget(self.squat_splitter)
+        self.squat_vertical_layout.setStretch(2, 6)
+
+        #add page
+        self.stackedWidget.addWidget(self.page_squat)
+
+
+        ######################################################## page sit up
+
+        self.page_situp = QWidget()
+        self.page_situp.setObjectName(u"page_situp")
+
+        #vertical layout
+        self.situp_vertical_layout = QVBoxLayout(self.page_situp)
+        self.situp_vertical_layout.setObjectName(u"situp_vertical_layout")
+        self.situp_vertical_layout.setContentsMargins(0, 20, 0, 0)
+        self.situp_vertical_layout.setContentsMargins(40, 40, 40, 40)
+
+        #horizontal layout for the text
+        self.situp_hori1 = QHBoxLayout(self.page_situp)
+        self.situp_hori1.setObjectName(u"situp_hori1")
+        self.situp_hori1.setContentsMargins(20, 20, 20, 20)
+
+        #horizontal layout for the screen & progress bar
+        self.situp_hori2 = QHBoxLayout(self.page_situp)
+        self.situp_hori2.setObjectName(u"situp_hori2")
+        self.situp_hori2.setContentsMargins(20, 20, 20, 20)
+
+        #try splitters
+        self.situp_splitter = QSplitter(Qt.Horizontal)
+        self.situp_splitter.setObjectName(u"situp_splitter")
+
+        #Screen
+        self.situp_screen = QtWidgets.QLabel(self.page_situp)
+        self.situp_screen.setAutoFillBackground(False)
+        self.situp_screen.setFrameShape(QtWidgets.QFrame.Panel)
+        self.situp_screen.setLineWidth(5)
+        self.situp_screen.setText("")
+        self.situp_hori2.addWidget(self.situp_screen)
+        self.situp_screen.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)  # Make it expand
+        self.situp_screen.setVisible(False)
+
+        #Progress Bar
+        self.situp_progressBar = QProgressBar(self.page_situp)
+        self.situp_progressBar.setProperty("value", 0)
+        self.situp_progressBar.setOrientation(QtCore.Qt.Vertical)
+        self.situp_hori2.addWidget(self.situp_progressBar)
+        self.situp_progressBar.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)  # Make it expand
+        self.situp_progressBar.setVisible(False)
+
+        #labels
+        self.situp_label1 = QLabel(self.page_situp)
+        self.situp_label1.setObjectName(u"situp_label1")
+        situp_font5 = QFont()
+        situp_font5.setFamily(u"Segoe UI")
+        situp_font5.setPointSize(16)
+        self.situp_label1.setFont(situp_font5)
+        self.situp_label1.setStyleSheet(u"")
+        self.situp_label1.setAlignment(Qt.AlignCenter)
+        self.situp_hori1.addWidget(self.situp_label1)
+        self.situp_label2 = QLabel(self.page_situp)
+        self.situp_label2.setObjectName(u"situp_label2")
+        self.situp_label2.setFont(font5)
+        self.situp_label2.setStyleSheet(u"")
+        self.situp_label2.setAlignment(Qt.AlignCenter)
+        self.situp_hori1.addWidget(self.situp_label2)
+        self.situp_label3 = QLabel(self.page_situp)
+        self.situp_label3.setObjectName(u"situp_label3")
+        self.situp_label3.setFont(situp_font5)
+        self.situp_label3.setStyleSheet(u"")
+        self.situp_label3.setAlignment(Qt.AlignCenter)
+        self.situp_hori1.addWidget(self.situp_label3)
+        self.situp_label4 = QLabel(self.page_situp)
+        self.situp_label4.setObjectName(u"situp_label4")
+        self.situp_label4.setFont(situp_font5)
+        self.situp_label4.setStyleSheet(u"")
+        self.situp_label4.setAlignment(Qt.AlignCenter)
+        self.situp_hori1.addWidget(self.situp_label4)
+
+        #set screen and progress bar as visible
+        self.situp_screen.setVisible(True)
+        self.situp_progressBar.setVisible(True)
+
+        #spacer
+        self.situp_spacer1 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.situp_spacer2 = QWidget()
+        self.situp_spacer2.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        #set splitter
+        self.situp_splitter.addWidget(self.situp_screen)
+        self.situp_splitter.addWidget(self.situp_spacer2)
+        self.situp_splitter.addWidget(self.situp_progressBar)
+        self.situp_splitter.setSizes([80, 10, 1])
+
+        #add layout
+        self.situp_vertical_layout.addLayout(self.situp_hori1)
+        self.situp_vertical_layout.addItem(self.situp_spacer1)
+        self.situp_vertical_layout.addWidget(self.situp_splitter)
+        self.situp_vertical_layout.setStretch(2, 6)
+
+        #add page
+        self.stackedWidget.addWidget(self.page_situp)
 
         ########################################################
 
@@ -1454,21 +1672,74 @@ class Ui_MainWindow(object):
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
+    def get_current_page(self):
+        return self.stackedWidget.currentIndex()
+
+    #webcam
     def ImageUpdateSlot(self, Image):
-        #Pic = Image.scaled(self.screen.width(), self.screen.height(), Qt.KeepAspectRatioByExpanding)
-        Pic = Image.scaled(self.screen.size(), Qt.KeepAspectRatio)
-        #Pic = Image.scaled(self.screen.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        self.screen.setPixmap(QPixmap.fromImage(Pic))
+        current_page = self.get_current_page()
+        #print("current: ", current_page)
+        if current_page == 0:
+            Pic1 = Image.scaled(self.screen.size(), Qt.KeepAspectRatio)
+            self.screen.setPixmap(QPixmap.fromImage(Pic1))
+        elif current_page == 2:
+            Pic2 = Image.scaled(self.squat_screen.size(), Qt.KeepAspectRatio)
+            self.squat_screen.setPixmap(QPixmap.fromImage(Pic2))
+        elif current_page == 3:
+            Pic3 = Image.scaled(self.situp_screen.size(), Qt.KeepAspectRatio)
+            self.situp_screen.setPixmap(QPixmap.fromImage(Pic3))
 
+    #progress bar        
     def updateProgress(self, value):
-        self.progressBar.setValue(value)
+        current_page = self.get_current_page()
+        if current_page == 0:
+            self.progressBar.setValue(value)
 
-    def updatePushUpCount(self, count):
-        self.label2.setText(str(count))
+    def squat_updateProgress(self, value):
+        current_page = self.get_current_page()
+        if current_page == 2:
+            self.squat_progressBar.setValue(value)
 
+    def situp_updateProgress(self, value):
+        current_page = self.get_current_page()
+        if current_page == 3:
+            self.situp_progressBar.setValue(value)
+
+    #counter
+    def updateCount(self, count):
+        current_page = self.get_current_page()
+        if current_page == 0:
+            self.label2.setText(str(count))
+
+    def squat_updateCount(self, count):
+        current_page = self.get_current_page()
+        if current_page == 2:
+            self.squat_label2.setText(str(count))
+
+    def situp_updateCount(self, count):
+        current_page = self.get_current_page()
+        if current_page == 3:
+            self.situp_label2.setText(str(count))
+
+    #update time
     def updateTime(self):
-        self.start_time = self.start_time.addSecs(1)
-        self.label4.setText(self.start_time.toString("hh:mm:ss"))
+        current_page = self.get_current_page()
+        if current_page == 0:
+            self.start_time = self.start_time.addSecs(1)
+            self.label4.setText(self.start_time.toString("hh:mm:ss"))
+
+    def squat_updateTime(self):
+        current_page = self.get_current_page()
+        if current_page == 2:
+            self.squat_start_time = self.squat_start_time.addSecs(1)
+            self.squat_label4.setText(self.squat_start_time.toString("hh:mm:ss"))
+
+    def situp_updateTime(self):
+        current_page = self.get_current_page()
+        if current_page == 3:
+            self.situp_start_time = self.situp_start_time.addSecs(1)
+            self.situp_label4.setText(self.situp_start_time.toString("hh:mm:ss"))
+
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
@@ -1492,16 +1763,28 @@ class Ui_MainWindow(object):
 
         #######################################
 
-        #page home text
+        #page pushup text
         self.label1.setText(QCoreApplication.translate("MainWindow", u"Number of Push Ups: ", None))
         self.label2.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.label3.setText(QCoreApplication.translate("MainWindow", u"Time Spent: ", None))
         self.label4.setText(QCoreApplication.translate("MainWindow", u"0", None))
 
+        #page squat text
+        self.squat_label1.setText(QCoreApplication.translate("MainWindow", u"Number of Squats:   ", None))
+        self.squat_label2.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.squat_label3.setText(QCoreApplication.translate("MainWindow", u"Time Spent: ", None))
+        self.squat_label4.setText(QCoreApplication.translate("MainWindow", u"0", None))
+
+        #page situp text
+        self.situp_label1.setText(QCoreApplication.translate("MainWindow", u"Number of Sit Ups:  ", None))
+        self.situp_label2.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.situp_label3.setText(QCoreApplication.translate("MainWindow", u"Time Spent: ", None))
+        self.situp_label4.setText(QCoreApplication.translate("MainWindow", u"0", None))
+
         #page info text
         self.instruct1.setText(QCoreApplication.translate("MainWindow", u"AI Fitness Trainer", None))
-        self.instruct2.setText(QCoreApplication.translate("MainWindow", u"This program is an application built upon machine learning and object detection. The goal of this program is to provide greater access to free fitness tools that can potentially improve the health and well-being of the human population. The instructions for this simple application are as follows: ", None))
-        self.instruct3.setText(QCoreApplication.translate("MainWindow", u"1. Navigate to the workout page.", None))
+        self.instruct2.setText(QCoreApplication.translate("MainWindow", u"This program is an application built upon machine learning and object detection. The goal of this program is to provide greater access to free fitness tools that can potentially improve the health and well-being of the human population. The instructions for this application are as follows: ", None))
+        self.instruct3.setText(QCoreApplication.translate("MainWindow", u"1. Open the menu and select your favorite workout.", None))
         self.instruct4.setText(QCoreApplication.translate("MainWindow", u"2. Turn on your camera and allow camera access.", None))
         self.instruct5.setText(QCoreApplication.translate("MainWindow", u"3. Follow the form shown above by facing the right and showing the camera the left side of your body.", None))
         self.instruct6.setText(QCoreApplication.translate("MainWindow", u"4. Start exercising!", None))
@@ -1586,11 +1869,34 @@ class Ui_MainWindow(object):
 
 class Worker1(QThread):
     ImageUpdate = pyqtSignal(QImage)
-    ProgressUpdate = pyqtSignal(int)
+    #progress bar
+    PushUpProgressUpdate = pyqtSignal(int)
+    SquatProgressUpdate = pyqtSignal(int)
+    SitUpProgressUpdate = pyqtSignal(int)
+    #counter
     PushUpCountUpdate = pyqtSignal(int)
+    SquatCountUpdate = pyqtSignal(int)
+    SitUpCountUpdate = pyqtSignal(int)
+
+
+
+
+    def __init__(self, main_window_instance):
+        super().__init__()
+        self.ThreadActive = False
+        self.pushup_count = 0
+        self.squat_count = 0
+        self.situp_count = 0
+        self.pushup_direction = 0
+        self.squat_direction = 0
+        self.situp_direction = 0
+        self.pushup_form = 0
+        self.squat_form = 0
+        self.situp_form = 0
+        self.main_window_instance = main_window_instance
 
     @staticmethod
-    def update_count(elbow, shoulder, hip, direction, count, form):
+    def push_up_update_count(elbow, shoulder, hip, direction, count, form):
         if elbow > 160 and shoulder > 40 and hip > 160:
             form = 1
         if form == 1:
@@ -1603,17 +1909,48 @@ class Worker1(QThread):
                     count += 0.5
                     direction = 0
         return count, direction, form
+    
+    @staticmethod
+    def squat_update_count(elbow, shoulder, hip, direction, count, form):
+        if hip <= 90:  # Check if hip is lower to indicate a squat position
+            if direction == 0:
+                count += 0.5
+                direction = 1
+        elif hip > 160:  # Check if standing position
+            if direction == 1:
+                count += 0.5
+                direction = 0
+        form = 1
+        return count, direction, form
+    
+    def situp_update_count(elbow, shoulder, hip, direction, count, form):
+        if hip > 130:  # Lying down position
+            if direction == 1:
+                count += 0.5
+                direction = 0
+            form = 1
+        elif hip <= 50: # Sit-up position
+            if direction == 0:
+                count += 0.5
+                direction = 1
+            form = 2
+        return count, direction, form
+    
 
     def run(self):
         self.ThreadActive = True
         cap = cv2.VideoCapture(0)
-        detector = dc.poseDetector()
-        count = 0
-        direction = 0
-        form = 0
+        detector = pm.poseDetector()
+
+        if not cap.isOpened():
+            #print("Error: Could not open video capture.")
+            return
 
         while self.ThreadActive:
             ret, img = cap.read()
+            if not ret:
+                #print("Error: Failed to capture image.")
+                continue
             img = detector.findPose(img, False)
             lmList = detector.findPosition(img, False)
 
@@ -1621,13 +1958,35 @@ class Worker1(QThread):
                 elbow = detector.findAngle(img, 11, 13, 15)
                 shoulder = detector.findAngle(img, 13, 11, 23)
                 hip = detector.findAngle(img, 11, 23, 25)
-                bar = np.interp(elbow, (90, 160), (0, 100))
-                count, direction, form = Worker1.update_count(elbow, shoulder, hip, direction, count, form)
-                self.ProgressUpdate.emit(int(bar))
-                self.PushUpCountUpdate.emit(int(count))
+                #progress bar
+                pushup_bar = np.interp(elbow, (90, 160), (0, 100))
+                squat_bar = np.interp(hip, (120, 180), (0, 100))
+                situp_bar = np.interp(hip, (50, 130), (0, 100))
+                
+                if self.main_window_instance and self.main_window_instance.stackedWidget:
+                    current_page = self.main_window_instance.get_current_page()
+                else:
+                    #print("StackedWidget reference is invalid.")
+                    continue
+
+                if current_page == 0:  # Pushup page
+                    self.pushup_count, self.pushup_direction, self.pushup_form = Worker1.push_up_update_count(elbow, shoulder, hip, self.pushup_direction, self.pushup_count, self.pushup_form)
+                    self.PushUpCountUpdate.emit(int(self.pushup_count))
+                    self.PushUpProgressUpdate.emit(int(pushup_bar)) 
+
+                elif current_page == 2:  # Squat page
+                    self.squat_count, self.squat_direction, self.squat_form = Worker1.squat_update_count(elbow, shoulder, hip, self.squat_direction, self.squat_count, self.squat_form)
+                    self.SquatCountUpdate.emit(int(self.squat_count))
+                    self.SquatProgressUpdate.emit(int(squat_bar))
+                
+                elif current_page == 3:  # Sit Up page
+                    self.situp_count, self.situp_direction, self.situp_form = Worker1.situp_update_count(elbow, shoulder, hip, self.situp_direction, self.situp_count, self.situp_form)
+                    self.SitUpCountUpdate.emit(int(self.situp_count))
+                    self.SitUpProgressUpdate.emit(int(situp_bar))
+                
 
             if ret:
                 Image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                 ConvertToQtFormat = QImage(Image.data, Image.shape[1], Image.shape[0], QImage.Format_RGB888)
-                Pic = ConvertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
-                self.ImageUpdate.emit(Pic)
+                #Pic = ConvertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+                self.ImageUpdate.emit(ConvertToQtFormat)
