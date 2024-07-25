@@ -758,12 +758,19 @@ class Ui_MainWindow(object):
         self.label4.setAlignment(Qt.AlignCenter)
         self.hori1.addWidget(self.label4)
 
+        #Feedback
+        self.label5 = QLabel(self.page_pushup)
+        self.label5.setObjectName(u"label5")
+        self.label5.setFont(font5)
+        self.label5.setStyleSheet(u"")
+        self.label5.setAlignment(Qt.AlignCenter)
+        
         #set screen and progress bar as visible
         self.screen.setVisible(True)
         self.progressBar.setVisible(True)
 
         #spacer
-        self.spacer1 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.spacer1 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Minimum)
         self.spacer2 = QWidget()
         self.spacer2.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
@@ -778,7 +785,10 @@ class Ui_MainWindow(object):
         self.vertical_layout.addItem(self.spacer1)
         self.vertical_layout.addWidget(self.splitter)
         self.vertical_layout.setStretch(2, 6)
+        self.vertical_layout.addItem(self.spacer1)
+        self.vertical_layout.addWidget(self.label5)
          
+
         #worker
         self.Worker1 = Worker1(self)
         self.Worker1.ImageUpdate.connect(self.ImageUpdateSlot)
@@ -792,6 +802,11 @@ class Ui_MainWindow(object):
         self.Worker1.PushUpCountUpdate.connect(self.updateCount)
         self.Worker1.SquatCountUpdate.connect(self.squat_updateCount) 
         self.Worker1.SitUpCountUpdate.connect(self.situp_updateCount) 
+
+        #Feedback
+        self.Worker1.PushUpFeedbackUpdate.connect(self.updatePushUpFeedback)
+        self.Worker1.SquatFeedbackUpdate.connect(self.updateSquatFeedback)
+        self.Worker1.SitUpFeedbackUpdate.connect(self.updateSitupFeedback)
 
 
         self.Worker1.start()
@@ -837,6 +852,14 @@ class Ui_MainWindow(object):
         instruct1_font.setPointSize(20)
         self.instruct1.setFont(instruct1_font)
         self.instruct1.setAlignment(Qt.AlignCenter)
+
+        self.instruct1_small = QLabel(self.page_info)
+        self.instruct1_small.setObjectName(u"instruct1_small")
+        instruct1_small = QFont()
+        instruct1_small.setFamily(u"Segoe UI")
+        instruct1_small.setPointSize(13)
+        self.instruct1_small.setFont(instruct1_small)
+        self.instruct1_small.setAlignment(Qt.AlignCenter)
 
         self.instruct2 = QLabel(self.page_info)
         self.instruct2.setObjectName(u"instruct2")
@@ -896,6 +919,7 @@ class Ui_MainWindow(object):
         
         #add layout
         self.instruct_vlayout.addWidget(self.instruct1)
+        self.instruct_vlayout.addWidget(self.instruct1_small)
         self.instruct_vlayout.addWidget(self.instruct2)
         self.vertical_layout.addItem(self.instruct_spacer1)
         self.instruct_vlayout.addWidget(self.image_label)
@@ -982,12 +1006,19 @@ class Ui_MainWindow(object):
         self.squat_label4.setAlignment(Qt.AlignCenter)
         self.squat_hori1.addWidget(self.squat_label4)
 
+        #Feedback
+        self.squat_label5 = QLabel(self.page_squat)
+        self.squat_label5.setObjectName(u"squat_label5")
+        self.squat_label5.setFont(font5)
+        self.squat_label5.setStyleSheet(u"")
+        self.squat_label5.setAlignment(Qt.AlignCenter)
+
         #set screen and progress bar as visible
         self.squat_screen.setVisible(True)
         self.squat_progressBar.setVisible(True)
 
         #spacer
-        self.squat_spacer1 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.squat_spacer1 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Minimum)
         self.squat_spacer2 = QWidget()
         self.squat_spacer2.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
@@ -1002,6 +1033,8 @@ class Ui_MainWindow(object):
         self.squat_vertical_layout.addItem(self.squat_spacer1)
         self.squat_vertical_layout.addWidget(self.squat_splitter)
         self.squat_vertical_layout.setStretch(2, 6)
+        self.squat_vertical_layout.addItem(self.squat_spacer1)
+        self.squat_vertical_layout.addWidget(self.squat_label5)
 
         #add page
         self.stackedWidget.addWidget(self.page_squat)
@@ -1079,12 +1112,20 @@ class Ui_MainWindow(object):
         self.situp_label4.setAlignment(Qt.AlignCenter)
         self.situp_hori1.addWidget(self.situp_label4)
 
+        #Feedback
+        self.situp_label5 = QLabel(self.page_situp)
+        self.situp_label5.setObjectName(u"situp_label5")
+        self.situp_label5.setFont(font5)
+        self.situp_label5.setStyleSheet(u"")
+        self.situp_label5.setAlignment(Qt.AlignCenter)
+        
+
         #set screen and progress bar as visible
         self.situp_screen.setVisible(True)
         self.situp_progressBar.setVisible(True)
 
         #spacer
-        self.situp_spacer1 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.situp_spacer1 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Minimum)
         self.situp_spacer2 = QWidget()
         self.situp_spacer2.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
@@ -1099,6 +1140,9 @@ class Ui_MainWindow(object):
         self.situp_vertical_layout.addItem(self.situp_spacer1)
         self.situp_vertical_layout.addWidget(self.situp_splitter)
         self.situp_vertical_layout.setStretch(2, 6)
+        self.situp_vertical_layout.addItem(self.situp_spacer1)
+        self.situp_vertical_layout.addWidget(self.situp_label5)
+
 
         #add page
         self.stackedWidget.addWidget(self.page_situp)
@@ -1674,6 +1718,22 @@ class Ui_MainWindow(object):
 
     def get_current_page(self):
         return self.stackedWidget.currentIndex()
+    
+    #Feedback
+    def updatePushUpFeedback(self, feedback):
+        current_page = self.get_current_page()
+        if current_page == 0:
+            self.label5.setText(feedback)
+
+    def updateSquatFeedback(self, feedback):
+        current_page = self.get_current_page()
+        if current_page == 2:
+            self.squat_label5.setText(feedback)
+
+    def updateSitupFeedback(self, feedback):
+        current_page = self.get_current_page()
+        if current_page == 3:
+            self.situp_label5.setText(feedback)
 
     #webcam
     def ImageUpdateSlot(self, Image):
@@ -1758,8 +1818,8 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
         self.btn_close.setText("")
         self.label_top_info_1.setText(QCoreApplication.translate("MainWindow", u"", None))
-        self.label_top_info_2.setText(QCoreApplication.translate("MainWindow", u"| HOME", None))
-        self.label_user_icon.setText(QCoreApplication.translate("MainWindow", u"WM", None))
+        self.label_top_info_2.setText(QCoreApplication.translate("MainWindow", u"| INFORMATION", None))
+        self.label_user_icon.setText(QCoreApplication.translate("MainWindow", u"", None))
 
         #######################################
 
@@ -1768,21 +1828,27 @@ class Ui_MainWindow(object):
         self.label2.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.label3.setText(QCoreApplication.translate("MainWindow", u"Time Spent: ", None))
         self.label4.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.label5.setText(QCoreApplication.translate("MainWindow", u"", None))
 
         #page squat text
         self.squat_label1.setText(QCoreApplication.translate("MainWindow", u"Number of Squats:   ", None))
         self.squat_label2.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.squat_label3.setText(QCoreApplication.translate("MainWindow", u"Time Spent: ", None))
         self.squat_label4.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.squat_label5.setText(QCoreApplication.translate("MainWindow", u"", None))
+
 
         #page situp text
         self.situp_label1.setText(QCoreApplication.translate("MainWindow", u"Number of Sit Ups:  ", None))
         self.situp_label2.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.situp_label3.setText(QCoreApplication.translate("MainWindow", u"Time Spent: ", None))
         self.situp_label4.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.situp_label5.setText(QCoreApplication.translate("MainWindow", u"", None))
+
 
         #page info text
-        self.instruct1.setText(QCoreApplication.translate("MainWindow", u"AI Fitness Trainer", None))
+        self.instruct1.setText(QCoreApplication.translate("MainWindow", u"<b>RAFA</b>", None))
+        self.instruct1_small.setText(QCoreApplication.translate("MainWindow", u"<i>(Real-Time AI Fitness Application)</i>", None))
         self.instruct2.setText(QCoreApplication.translate("MainWindow", u"This program is an application built upon machine learning and object detection. The goal of this program is to provide greater access to free fitness tools that can potentially improve the health and well-being of the human population. The instructions for this application are as follows: ", None))
         self.instruct3.setText(QCoreApplication.translate("MainWindow", u"1. Open the menu and select your favorite workout.", None))
         self.instruct4.setText(QCoreApplication.translate("MainWindow", u"2. Turn on your camera and allow camera access.", None))
@@ -1877,8 +1943,10 @@ class Worker1(QThread):
     PushUpCountUpdate = pyqtSignal(int)
     SquatCountUpdate = pyqtSignal(int)
     SitUpCountUpdate = pyqtSignal(int)
-
-
+    #Feedback
+    PushUpFeedbackUpdate = pyqtSignal(str)
+    SquatFeedbackUpdate = pyqtSignal(str)
+    SitUpFeedbackUpdate = pyqtSignal(str)
 
 
     def __init__(self, main_window_instance):
@@ -1897,6 +1965,7 @@ class Worker1(QThread):
 
     @staticmethod
     def push_up_update_count(elbow, shoulder, hip, direction, count, form):
+        feedback = ""
         if elbow > 160 and shoulder > 40 and hip > 160:
             form = 1
         if form == 1:
@@ -1904,37 +1973,46 @@ class Worker1(QThread):
                 if direction == 0:
                     count += 0.5
                     direction = 1
+                feedback = "Good form! Keep your back straight."
             elif elbow > 160 and shoulder > 40 and hip > 160:
                 if direction == 1:
                     count += 0.5
                     direction = 0
-        return count, direction, form
+                feedback = "Great job! Make sure you go down further."
+        return count, direction, form, feedback
     
     @staticmethod
     def squat_update_count(elbow, shoulder, hip, direction, count, form):
+        feedback = ""
         if hip <= 90:  # Check if hip is lower to indicate a squat position
             if direction == 0:
                 count += 0.5
                 direction = 1
+            feedback = "Good squat! Keep your knees behind your toes."
         elif hip > 160:  # Check if standing position
             if direction == 1:
                 count += 0.5
                 direction = 0
+            feedback = "Great job! Keep your back straight."
         form = 1
-        return count, direction, form
+        return count, direction, form, feedback
     
+    @staticmethod
     def situp_update_count(elbow, shoulder, hip, direction, count, form):
+        feedback = ""
         if hip > 130:  # Lying down position
             if direction == 1:
                 count += 0.5
                 direction = 0
+            feedback = "Good start! Make sure your shoulders touch the ground."
             form = 1
-        elif hip <= 50: # Sit-up position
+        elif hip <= 50:  # Sit-up position
             if direction == 0:
                 count += 0.5
                 direction = 1
+            feedback = "Great job! Try to touch your knees."
             form = 2
-        return count, direction, form
+        return count, direction, form, feedback
     
 
     def run(self):
@@ -1947,10 +2025,10 @@ class Worker1(QThread):
             return
 
         while self.ThreadActive:
-            ret, img = cap.read()
-            if not ret:
-                #print("Error: Failed to capture image.")
-                continue
+            try:
+                ret, img = cap.read()
+            except Exception as e:
+                break
             img = detector.findPose(img, False)
             lmList = detector.findPosition(img, False)
 
@@ -1960,7 +2038,7 @@ class Worker1(QThread):
                 hip = detector.findAngle(img, 11, 23, 25)
                 #progress bar
                 pushup_bar = np.interp(elbow, (90, 160), (0, 100))
-                squat_bar = np.interp(hip, (120, 180), (0, 100))
+                squat_bar = np.interp(hip, (120, 160), (0, 100))
                 situp_bar = np.interp(hip, (50, 130), (0, 100))
                 
                 if self.main_window_instance and self.main_window_instance.stackedWidget:
@@ -1970,19 +2048,22 @@ class Worker1(QThread):
                     continue
 
                 if current_page == 0:  # Pushup page
-                    self.pushup_count, self.pushup_direction, self.pushup_form = Worker1.push_up_update_count(elbow, shoulder, hip, self.pushup_direction, self.pushup_count, self.pushup_form)
+                    self.pushup_count, self.pushup_direction, self.pushup_form, pushup_feedback = Worker1.push_up_update_count(elbow, shoulder, hip, self.pushup_direction, self.pushup_count, self.pushup_form)
                     self.PushUpCountUpdate.emit(int(self.pushup_count))
-                    self.PushUpProgressUpdate.emit(int(pushup_bar)) 
+                    self.PushUpProgressUpdate.emit(int(pushup_bar))
+                    self.PushUpFeedbackUpdate.emit(pushup_feedback)
 
                 elif current_page == 2:  # Squat page
-                    self.squat_count, self.squat_direction, self.squat_form = Worker1.squat_update_count(elbow, shoulder, hip, self.squat_direction, self.squat_count, self.squat_form)
+                    self.squat_count, self.squat_direction, self.squat_form, squat_feedback = Worker1.squat_update_count(elbow, shoulder, hip, self.squat_direction, self.squat_count, self.squat_form)
                     self.SquatCountUpdate.emit(int(self.squat_count))
                     self.SquatProgressUpdate.emit(int(squat_bar))
+                    self.SquatFeedbackUpdate.emit(squat_feedback)
                 
                 elif current_page == 3:  # Sit Up page
-                    self.situp_count, self.situp_direction, self.situp_form = Worker1.situp_update_count(elbow, shoulder, hip, self.situp_direction, self.situp_count, self.situp_form)
+                    self.situp_count, self.situp_direction, self.situp_form, situp_feedback = Worker1.situp_update_count(elbow, shoulder, hip, self.situp_direction, self.situp_count, self.situp_form)
                     self.SitUpCountUpdate.emit(int(self.situp_count))
                     self.SitUpProgressUpdate.emit(int(situp_bar))
+                    self.SitUpFeedbackUpdate.emit(situp_feedback)
                 
 
             if ret:
