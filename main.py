@@ -24,8 +24,8 @@ class MainWindow(QMainWindow):
 
         #self.setMaximumSize(QSize(1500, 900))
 
-        print('System: ' + platform.system())
-        print('Version: ' +platform.release())
+        #print('System: ' + platform.system())
+        #print('Version: ' +platform.release())
 
         
 
@@ -105,26 +105,33 @@ class MainWindow(QMainWindow):
        
     def eventFilter(self, watched, event):
         if watched == self.le and event.type() == QtCore.QEvent.MouseButtonDblClick:
-            print("pos: ", event.pos())
+            #print("pos: ", event.pos())
+            pass
    
     def mousePressEvent(self, event):
         self.dragPos = event.globalPos()
         if event.buttons() == Qt.LeftButton:
-            print('Mouse click: LEFT CLICK')
+            #print('Mouse click: LEFT CLICK')
+            pass
         if event.buttons() == Qt.RightButton:
-            print('Mouse click: RIGHT CLICK')
+            #print('Mouse click: RIGHT CLICK')
+            pass
         if event.buttons() == Qt.MidButton:
-            print('Mouse click: MIDDLE BUTTON')
+            #print('Mouse click: MIDDLE BUTTON')
+            pass
    
+
     def keyPressEvent(self, event):
-        print('Key: ' + str(event.key()) + ' | Text Press: ' + str(event.text()))
+        #print('Key: ' + str(event.key()) + ' | Text Press: ' + str(event.text()))
+        pass
     
     def resizeEvent(self, event):
         self.resizeFunction()
         return super(MainWindow, self).resizeEvent(event)
 
     def resizeFunction(self):
-        print('Height: ' + str(self.height()) + ' | Width: ' + str(self.width()))
+        #print('Height: ' + str(self.height()) + ' | Width: ' + str(self.width()))
+        pass
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
