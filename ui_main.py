@@ -698,12 +698,12 @@ class Ui_MainWindow(object):
         self.vertical_layout.setContentsMargins(40, 40, 40, 40)
 
         #horizontal layout for the text
-        self.hori1 = QHBoxLayout(self.page_pushup)
+        self.hori1 = QHBoxLayout()
         self.hori1.setObjectName(u"hori1")
         self.hori1.setContentsMargins(20, 20, 20, 20)
 
         #horizontal layout for the screen & progress bar
-        self.hori2 = QHBoxLayout(self.page_pushup)
+        self.hori2 = QHBoxLayout()
         self.hori2.setObjectName(u"hori2")
         self.hori2.setContentsMargins(20, 20, 20, 20)
 
@@ -946,12 +946,12 @@ class Ui_MainWindow(object):
         self.squat_vertical_layout.setContentsMargins(40, 40, 40, 40)
 
         #horizontal layout for the text
-        self.squat_hori1 = QHBoxLayout(self.page_squat)
+        self.squat_hori1 = QHBoxLayout()
         self.squat_hori1.setObjectName(u"squat_hori1")
         self.squat_hori1.setContentsMargins(20, 20, 20, 20)
 
         #horizontal layout for the screen & progress bar
-        self.squat_hori2 = QHBoxLayout(self.page_squat)
+        self.squat_hori2 = QHBoxLayout()
         self.squat_hori2.setObjectName(u"squat_hori2")
         self.squat_hori2.setContentsMargins(20, 20, 20, 20)
 
@@ -1052,12 +1052,12 @@ class Ui_MainWindow(object):
         self.situp_vertical_layout.setContentsMargins(40, 40, 40, 40)
 
         #horizontal layout for the text
-        self.situp_hori1 = QHBoxLayout(self.page_situp)
+        self.situp_hori1 = QHBoxLayout()
         self.situp_hori1.setObjectName(u"situp_hori1")
         self.situp_hori1.setContentsMargins(20, 20, 20, 20)
 
         #horizontal layout for the screen & progress bar
-        self.situp_hori2 = QHBoxLayout(self.page_situp)
+        self.situp_hori2 = QHBoxLayout()
         self.situp_hori2.setObjectName(u"situp_hori2")
         self.situp_hori2.setContentsMargins(20, 20, 20, 20)
 
