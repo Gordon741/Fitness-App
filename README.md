@@ -3,6 +3,6 @@ RAFA is an AI-powered real-time fitness trainer. It is a simple and elegant GUI 
 
 ## Getting Started
 1. Clone this repository with `git clone https://github.com/Gordon741/Fitness-App.git`
-2. Move into the repository with `cd AI-Fitness-Trainer`
+2. Move into the repository with `cd Fitness-App`
 3. Install dependencies by running `pip install -r requirements.txt` 
 5. Run `python main.py`; use `python3` if you're using the latest version of Python.
